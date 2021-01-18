@@ -46,3 +46,16 @@ Using SQL, she finds that 24% of all users who browse move on to checkout. 89% o
 FROM page_visits
 GROUP BY 1
 ORDER BY 2 DESC;
+
+/* What is a Relational Database Management System (RDBMS)?
+
+A relational database management system (RDBMS) is a program that allows you to create, update, and administer a relational database. Most relational database management systems use the SQL language to access the database. 
+*/
+
+/*
+A relational database is a database that organizes information into one or more tables. Here, the relational database contains one table.
+
+A table is a collection of data organized into rows and columns. Tables are sometimes referred to as relations. Here the table is celebs.
+
+A column is a set of data values of a particular type. Here, id, name, and age are the columns. 
+*/

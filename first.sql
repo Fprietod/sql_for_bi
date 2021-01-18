@@ -1,10 +1,11 @@
 
-   // Writing basic queries
-    //Calculating aggregates
-     // Combining data from multiple tables
-    // Determining web traffic attribution
-    // Creating usage funnels
-    // Analyzing user churn
+   /* Writing basic queries
+    Calculating aggregates
+      Combining data from multiple tables
+     Determining web traffic attribution
+     Creating usage funnels
+     Analyzing user churn
+     */
 
 /*  Spreadsheets, like Microsoft Excel and Google Sheets, allow you to view and manipulate data directly: with selecting, filtering, sorting, etc. By applying a number of these operations you can obtain the subset of data you are seeking.
 
@@ -38,3 +39,10 @@ Using SQL, she finds that 24% of all users who browse move on to checkout. 89% o
  	ON b.user_id = c.user_id
  LEFT JOIN purchase p
  	ON c.user_id = p.user_id;
+   
+   /* Catherine wants to know how many visits come from each utm_source.  */
+   SELECT utm_source,
+ 	COUNT(DISTINCT user_id) AS num_users
+FROM page_visits
+GROUP BY 1
+ORDER BY 2 DESC;

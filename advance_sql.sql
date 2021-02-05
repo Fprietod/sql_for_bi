@@ -95,3 +95,77 @@ FROM social_media;
 /*
 We can see the running total for all of our users. We can also see the change_in_followers next to our running total.
 */
+/*
+Utilizing PARTITION BY allowed us to find the total change in followers for each user up to the current month and display it next to the current month.
+*/
+SELECT username, month,
+change_in_followers,
+    SUM(change_in_followers) OVER (
+      PARTITION BY username
+      ORDER BY month
+    ) 'running_total_followers_change',
+    
+    AVG(change_in_followers) OVER (
+      PARTITION BY username
+      ORDER BY month
+    )'running_avg_followers_change'
+FROM social_media;
+
+
+/*
+FIRST_VALUE and LAST_VALUE
+
+In the past, when we wanted to get the first or last value of a query, we might use the LIMIT clause, probably in conjunction with ORDER BY, which would return one result showing us the first or last value from our dataset.
+
+With window functions, we can return our first or last values alongside our other data by using the FIRST_VALUE() or LAST_VALUE() functions. 
+
+They work exactly as you would imagine:
+
+    FIRST_VALUE() returns the first value in an ordered set of values.
+    LAST_VALUE() returns the last value in an ordered set of values.
+
+Let’s break down a query that is fetching the FIRST_VALUE() from our social media dataset
+*/ 
+/*
+Let’s break down a query that is fetching the FIRST_VALUE() from our social media dataset:
+*/
+SELECT
+   username,
+   posts,
+   FIRST_VALUE (posts) OVER (
+      PARTITION BY username 
+      ORDER BY posts
+   ) fewest_posts
+FROM
+   social_media;
+   
+ /*
+ This query should look familiar overall as it follows the standard window function format, however, we are using FIRST_VALUE now for posts. This means our window function will pull the first value from the posts column.
+ OVER (PARTITION BY username ORDER BY posts) fewest_posts: here we can see that posts is going to be pulled based on username due to the PARTITION BY. We are naming this column fewest_posts because of the ORDER BY which defaults to ascending order.
+ */
+ /*
+ The result is showing us each of the usernames from the table alongside how many posts they posted each month. Our fewest_posts column is showing the lowest number of posts that user made for any month.
+ */
+ /*
+ If FIRST_VALUE is returning the fewest posts, then LAST_VALUE should return the most posts for each user.
+
+Update the query now to use LAST_VALUE instead of FIRST_VALUE. 
+*/
+SELECT username,
+   posts,
+   LAST_VALUE (posts) OVER (
+      PARTITION BY username 
+      ORDER BY posts
+   ) AS 'fewest_posts'
+FROM social_media;
+/*
+Here we can see it is pulling the last value for each row. This is not showing us the last value for any user but instead the current row (which would be the last value!) 
+*/
+/*
+We saw that LAST_VALUE didn’t work as we expected. This is because each row in our results set is the last row at the time it is outputted.
+
+In order to get LAST_VALUE to show us the most posts for a user, we need to specify a frame for our window function.
+*/
+
+
+

@@ -166,6 +166,21 @@ We saw that LAST_VALUE didn’t work as we expected. This is because each row in
 
 In order to get LAST_VALUE to show us the most posts for a user, we need to specify a frame for our window function.
 */
+SELECT
+   username,
+   posts,
+   LAST_VALUE (posts) OVER (
+      PARTITION BY username 
+      ORDER BY posts
+      RANGE BETWEEN UNBOUNDED PRECEDING AND 
+      UNBOUNDED FOLLOWING
+    ) most_posts
+FROM
+    social_media;
+    
+    /*
+    RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING specifies the frame for our window function as the current partition and thus returns the highest number of posts in one month for each user.
+    */
 
 
 

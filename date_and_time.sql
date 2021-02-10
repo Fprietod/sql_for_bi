@@ -113,3 +113,62 @@ COUNT(*)
 FROM bakery
 GROUP BY 1
 ORDER BY 2 DESC;
+
+--Review
+/*
+Review
+
+Congratulations!
+
+You’ve just learned several useful math operators and functions, along with some date functions in SQL.
+
+Let’s review everything you’ve gone over so far.
+
+Math operators:
+
+    + Addition
+    - Subtraction
+    / Division
+    * Multiplication
+    % Modulo
+
+Math functions:
+
+    ABS(): Gives us the absolute value of the input expression
+
+    CAST(): Converts the value of an expression into another data type
+
+Date functions:
+
+    DATETIME(): Obtains the date and time of a time string
+
+    DATE(): Obtains the date portion of a time string
+
+    TIME(): Obtains the time portion of a time string
+
+    STRFTIME(): Returns a formatted date
+
+Date function modifiers:
+
+    Modifiers to shift the date backwards to a specified part:
+        'start of year'
+        'start of month'
+        'start of day'
+    Modifiers to add a specified amount to the date and time of a time string:
+        '+-N years'
+        '+-N months'
+        '+-N days'
+        '+-N hours'
+        '+-N minutes'
+        '+-N seconds'
+
+Format string substitutions:
+
+    %Y returns the year (YYYY)
+    %m returns the month (01-12)
+    %d returns the day of month (01-31)
+    %H returns the hour (00-23)
+    %M returns the minute (00-59)
+    %S returns the second (00-59)
+
+*/

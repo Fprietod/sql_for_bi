@@ -70,3 +70,46 @@ Utilizing the date and time functions and some modifiers, find out when each ord
 */
 SELECT DATETIME(order_date, 'start of day', '+2 days', '+7 hours')
 FROM bakery;
+
+/*
+Date and Time Functions III
+
+The STRFTIME() function allows you to return a formatted date, as specified in a format string.
+
+It has the following syntax:
+*/
+STRFTIME(format, timestring, modifier1, modifier2, ...)
+/*
+The first argument, format, is the format string.
+
+The second argument is the timestring.
+
+The remaining arguments are 0 or more optional modifiers to transform the time string.
+
+Let’s go into some more detail about the format string. The format string allows you to extract specific parts of the date and time. Recall the time string format of YYYY-MM-DD HH:MM:SS. Each part of this time string can be extracted utilizing what are known as substitutions inside the format string.
+*/
+/*
+The substitutions to extract each part of the date and time are the following:
+
+    %Y returns the year (YYYY)
+    %m returns the month (01-12)
+    %d returns the day of month (01-31)
+    %H returns the hour (00-23)
+    %M returns the minute (00-59)
+    %S returns the second (00-59)
+*/
+/*For example, to extract the month and year of the current date,
+*/
+SELECT STRFTIME('%m %Y', 'now');
+-- And to extract just the current day,
+SELECT STRFTIME('%d', 'now');
+/*
+The owners of the bakery want to find out what day most people placed orders.
+
+Use STRFTIME() with the COUNT() function to find out how many orders were made on each day.
+*/
+SELECT strftime('%d', order_date) AS 'order_day',
+COUNT(*)
+FROM bakery
+GROUP BY 1
+ORDER BY 2 DESC;

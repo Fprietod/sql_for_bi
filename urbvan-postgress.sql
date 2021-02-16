@@ -45,3 +45,8 @@ CREATE TABLE public.trip (
 	CONSTRAINT trip_id PRIMARY KEY (trip_id),
 	CONSTRAINT driver_id FOREIGN KEY (driver_id) REFERENCES public.driver(driver_id)
 );
+
+
+-- Comando para modificar las tablas
+ALTER TABLE public.trip ADD CONSTRAINT trip_fk FOREIGN KEY (driver_id) REFERENCES public.driver(driver_id);
+

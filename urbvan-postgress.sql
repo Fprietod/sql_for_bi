@@ -2,7 +2,7 @@ CREATE DATABASE postgres;
 CREATE SCHEMA public;
 
 CREATE TABLE public.client (
-	client_id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+	client_id integer NOT NULL,
 	created_at timestamptz NULL,
 	first_name varchar(50) NULL,
 	last_name varchar(50) NULL,
@@ -12,7 +12,7 @@ CREATE TABLE public.client (
 );
 
 CREATE TABLE public.reservation (
-	reservation_id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+	reservation_id integer NOT NULL,
 	trip_id integer NULL,
 	client_id integer NULL,
 	created_at timestamptz NULL,
@@ -23,7 +23,7 @@ CREATE TABLE public.reservation (
 	CONSTRAINT trip_id FOREIGN KEY (trip_id) REFERENCES public.trip(trip_id)
 );
 CREATE TABLE public.driver (
-	driver_id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+	driver_id integer NOT NULL,
 	created_at timestamptz NULL,
 	first_name varchar(50) NULL,
 	last_name varchar(50) NULL,
@@ -32,7 +32,7 @@ CREATE TABLE public.driver (
 	CONSTRAINT driver_id PRIMARY KEY (driver_id)
 );
 CREATE TABLE public.trip (
-	trip_id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
+	trip_id integer NOT NULL ,
 	driver_id integer NULL,
 	on_sale_at timestamptz NULL,
 	departure_at timestamptz NULL,
@@ -49,5 +49,7 @@ CREATE TABLE public.trip (
 
 -- Comando para modificar una tabla y en este caso agregar una llave foranea
 ALTER TABLE public.trip ADD CONSTRAINT trip_fk FOREIGN KEY (driver_id) REFERENCES public.driver(driver_id);
+ALTER TABLE public.reservation ADD CONSTRAINT trip_id FOREIGN KEY (trip_id) REFERENCES public.trip(trip_id);
+
 
 

@@ -19,8 +19,8 @@ CREATE TABLE public.reservation (
 	seats integer NULL,
 	total_price integer NULL,
 	CONSTRAINT reservation_id PRIMARY KEY (reservation_id),
-	CONSTRAINT client_id FOREIGN KEY (client_id) REFERENCES public.client(client_id),
-	CONSTRAINT trip_id FOREIGN KEY (trip_id) REFERENCES public.trip(trip_id)
+	CONSTRAINT reservation_fk FOREIGN KEY (client_id) REFERENCES client(client_id),
+	CONSTRAINT trip_id FOREIGN KEY (trip_id) REFERENCES trip(trip_id)
 );
 CREATE TABLE public.driver (
 	driver_id integer NOT NULL,

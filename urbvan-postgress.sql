@@ -47,6 +47,7 @@ CREATE TABLE public.trip (
 );
 
 
--- Comando para modificar las tablas
+-- Comando para modificar una tabla y en este caso agregar una llave foranea
 ALTER TABLE public.trip ADD CONSTRAINT trip_fk FOREIGN KEY (driver_id) REFERENCES public.driver(driver_id);
+
 

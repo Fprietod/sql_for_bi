@@ -131,3 +131,68 @@ SELECT
 FROM
    social_media;
 ```
+- This query should look familiar overall as it follows the standard window function format, however, we are using FIRST_VALUE now for posts. This means our window function will pull the first value from the posts column.
+- OVER (PARTITION BY username ORDER BY posts) fewest_posts: here we can see that posts is going to be pulled based on username due to the PARTITION BY. We are naming this column fewest_posts because of the ORDER BY which defaults to ascending order.
+- And all of this is coming from our social_media table.
+
+If we want to use the Last_value
+In order to get LAST_VALUE to show us the most posts for a user, we need to specify a frame for our window function.
+```sql
+SELECT
+   username,
+   posts,
+   LAST_VALUE (posts) OVER (
+      PARTITION BY username 
+      ORDER BY posts
+      RANGE BETWEEN UNBOUNDED PRECEDING AND 
+      UNBOUNDED FOLLOWING
+    ) most_posts
+FROM
+    social_media;
+```
+
+### LAG 
+
+Las funciones de ventana pueden usar LAG o LEAD para acceder a la información de una fila en un desplazamiento específico que viene antes (LAG) o después (LEAD) de la fila actual.
+
+Esto significa que al usar LAG o LEAD puede acceder a cualquier fila antes o después de la fila actual, lo que puede ser muy útil para calcular la diferencia entre la fila actual y la adyacente. Primero nos centraremos en el uso de LAG. 
+
+Veamos una función de ventana que usa LAG. Analizaremos la cantidad actual de transmisiones del artista y sus transmisiones de la semana anterior. 
+```sql
+SELECT
+   artist,
+   week,
+   streams_millions,
+   LAG(streams_millions, 1, 0) OVER (
+      ORDER BY week 
+   ) previous_week_streams 
+FROM
+   streams 
+WHERE
+   artist = 'Lady Gaga';
+```
+
+LAG takes up to three arguments:
+
+   - column (required)
+   - offset (optional, default 1 row offset)
+   - default (optional, what to replace default null values with)
+
+
+
+Mostrar el valor de la fila anterior en cada fila puede ser útil, pero para nuestros propósitos, cambiemos nuestra función LAG para mostrar el cambio en las transmisiones de Lady Gaga por semana: 
+```sql
+SELECT
+   artist,
+   week,
+   streams_millions,
+   streams_millions - LAG(streams_millions, 1, streams_millions) OVER ( 
+      ORDER BY week 
+   ) streams_millions_change
+FROM
+   streams 
+WHERE
+   artist = 'Lady Gaga';
+```
+Para hacer esto, solo necesitamos restar los streams_millions de la semana actual por el valor de nuestra función LAG (que devuelve los streams_millions de la semana anterior).
+![alt text](https://fotos-11.s3.amazonaws.com/Query.PNG)

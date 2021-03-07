@@ -1,6 +1,6 @@
 # Windows Function
 
-Window functions, on the other hand, allow you to maintain the values of your original table while displaying grouped or summative information alongside in another column. This is why many Data Scientists and Data Engineers love to use window functions for complex data analysis.
+Las funciones de ventana, por otro lado, le permiten mantener los valores de su tabla original mientras muestra información agrupada o sumativa al lado en otra columna. Esta es la razón por la que a muchos científicos e ingenieros de datos les encanta usar funciones de ventana para análisis de datos complejos. 
 ```sql
 SELECT 
    month,
@@ -305,3 +305,55 @@ Because we are using RANK now and the 6th and 7th spot have the same value (26.3
 
 ![example](https://fotos-11.s3.amazonaws.com/metrocdmx/Rank.PNG)
 
+### NTILE
+
+La última función de ventana que vamos a aprender se llama NTILE y puede usarse para encontrar cuartiles, quintiles o cualquier ntile que desee su corazón impulsado por datos.
+
+NTILE le permite dividir sus datos en grupos aproximadamente iguales, según el ntile que le gustaría: por lo tanto, si estuviera usando un cuartil, dividiría los datos en cuatro grupos (trimestres).
+
+Cuando utilice NTILE, debe proporcionar un depósito, que representa la cantidad de grupos en los que le gustaría que se desglosaran sus datos: NTILE (4) serían cuatro "depósitos" que representarían los cuartiles. 
+
+```sql
+SELECT 
+   NTILE(5) OVER (
+      ORDER BY streams_millions DESC
+   ) AS 'weekly_streams_group', 
+   artist, 
+   week,
+   streams_millions
+FROM
+   streams;
+```
+- ¿Qué representa cada NTILE?
+- Si estás en Weekly_streams_group 1, ¿eres el artista más o menos reproducido?
+- ¿Qué artistas componen el grupo más reproducido? 
+![ejemplo](https://fotos-11.s3.amazonaws.com/metrocdmx/NTILE.PNG)
+
+Debido a que tenemos 5 cubos, este NTILE representaría quintiles o quintos. El quintil superior está compuesto casi en su totalidad por Drake. The Weeknd y Bad Bunny también tuvieron suficientes transmisiones semanales para ubicarlos en algunos lugares en el quintil superior. 
+```sql
+SELECT 
+   NTILE(4) OVER (
+      ORDER BY streams_millions DESC
+   ) AS 'weekly_streams_group', 
+   artist, 
+   week,
+   streams_millions
+FROM
+   streams;
+```
+Con los cuartiles, cada grupo ahora es más grande y contiene más transmisiones semanales. Nuestro cuartil superior sigue siendo principalmente Drake y The Weeknd, con una semana de Bad Bunny y una semana de Lady Gaga (que no estaba en el quintil superior anterior). 
+
+
+Ahora tenemos cuartiles para cada semana. Cada cuartil contiene dos artistas porque tenemos ocho artistas en total para cada semana en nuestro conjunto de datos. 
+```sql
+SELECT 
+   NTILE(4) OVER (
+      PARTITION BY week
+      ORDER BY streams_millions DESC
+   ) AS 'quartile', 
+   artist, 
+   week,
+   streams_millions
+FROM
+   streams;
+```

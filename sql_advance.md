@@ -196,3 +196,112 @@ WHERE
 ```
 Para hacer esto, solo necesitamos restar los streams_millions de la semana actual por el valor de nuestra función LAG (que devuelve los streams_millions de la semana anterior).
 ![alt text](https://fotos-11.s3.amazonaws.com/Query.PNG)
+
+For calculating the chart position change, remember that a decrease in number on the chart is actually a good thing and considered positive so your subtraction will look a little different:
+```sql
+SELECT
+   artist,
+   week,
+   streams_millions,
+   streams_millions - LAG(streams_millions, 1, streams_millions) OVER ( 
+      PARTITION BY artist
+      ORDER BY week 
+   ) AS 'streams_millions_change',
+   chart_position,
+   LAG(chart_position, 1, chart_position) OVER ( 
+      PARTITION BY artist
+      ORDER BY week 
+) - chart_position AS 'chart_position_change'
+FROM
+   streams
+WHERE 
+   artist = 'Lady Gaga';
+```
+### LEAD
+
+Vamos a modificar esto para usar LEAD, que mira a las filas futuras, en lugar de LAG, que mira a las filas anteriores. 
+
+Ejemplo:
+
+Debido a que LEAD mira a las filas futuras, debemos cambiar la forma en que restamos para encontrar las corrientes que cambian millones: 
+```sql
+SELECT
+   artist,
+   week,
+   streams_millions,
+   LEAD(streams_millions, 1) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) - streams_millions AS 'streams_millions_change'
+FROM
+   streams;
+```
+Restaremos los millones de flujos de la fila actual de los millones de flujos de la siguiente fila para ver un reflejo preciso de cómo ha cambiado el número de flujos. 
+
+![Imagen con lead](https://fotos-11.s3.amazonaws.com/metrocdmx/Query.PNG)
+
+Posición en la tabla:
+
+
+¡Recuerda invertir tu resta! Ahora desea restar la posición actual del gráfico de la posición del gráfico de la siguiente fila. Chart_position_change es lo opuesto a streams_millions_change porque una disminución en la posición del gráfico (pasando del número 10 al 1) está considerando subir en los gráficos. 
+```sql
+SELECT
+   artist,
+   week,
+   streams_millions,
+   LEAD(streams_millions, 1) OVER (
+      PARTITION BY artist
+      ORDER BY week
+   ) - streams_millions AS 'streams_millions_change',
+   chart_position,
+   chart_position - LEAD(chart_position, 1) OVER ( 
+      PARTITION BY artist
+      ORDER BY week 
+) AS 'chart_position_change'
+FROM
+   streams;
+```
+
+### Row number
+
+Now that we have a good understanding of how to fetch data from different rows, let’s explore how we can use window functions to order and rank our results.
+The most straight-forward way to order our results is by using the ROW_NUMBER function which adds sequential integer number to each row. 
+Adding a ROW_NUMBER to each row can be useful for seeing where in your result set the row falls.
+
+Example
+```sql
+SELECT
+ROW_NUMBER() OVER(
+  ORDER BY streams_millions
+) AS 'row_num',
+artist,
+week,
+streams_millions
+FROM streams;
+```
+Question What happens for the row_num when the streams_millions are equal?
+The rows continue to increase even when the values are equal because it is solely based on the number of the row in our results set.
+
+An example of this is when 'row_num' is 7 and 8 and the streams_million is 26.3 for both.
+![Row](https://fotos-11.s3.amazonaws.com/metrocdmx/row.PNG)
+
+### RANK
+
+Now that we understand how to use ROW_NUMBER, there is another function that is similar but provides an actual ranking: RANK.
+
+If you were to modify your ROW_NUMBER query to use RANK instead, it might appear to be exactly the same at first glance. But if you look more closely, you can see that RANK will follow standard ranking rules so that when two values are the same, they will have the same rank whereas with ROW_NUMBER they would not.
+```sql
+SELECT 
+   RANK() OVER (
+      ORDER BY streams_millions
+   ) AS 'rank', 
+   artist, 
+   week,
+   streams_millions
+FROM
+   streams;
+```
+Because we are using RANK now and the 6th and 7th spot have the same value (26.3), they are both ranked as 7. Then, in standard ranking fashion, the next value is ranked as 9.
+
+![example](https://fotos-11.s3.amazonaws.com/metrocdmx/Rank.PNG)
+

@@ -38,6 +38,7 @@ user_id 	timestamp 	page_name 	utm_source
 ```sql
 SELECT * FROM page_visits
 where user_id = 10069;
+```
 
 
   - June’s last touch — the exposure to CoolTShirts.com that led to a purchase — is attributed to facebook
@@ -56,9 +57,10 @@ SELECT * FROM page_visits
 WHERE user_id = 10329;
 ```
 Result
-page_name 	timestamp 	user_id 	utm_campaign 	utm_source
-1 - landing_page 	2018-01-18 05:27:25 	10329 	interview-with-cool-tshirts-founder 	medium
-2 - shopping_cart 	2018-01-18 07:15:25 	10329 	interview-with-cool-tshirts-founder 	medium
-3 - checkout 	2018-01-22 16:31:25 	10329 	retargetting-campaign 	email
-4 - purchase 	2018-01-22 16:35:25 	10329 	retargetting-campaign 	email
+| page_name |	| timestamp |	 | user_id | 	| utm_campaign | 	| utm_source |
+| --------- | |---------- | -----------|  |--------------|  |------------|
+| 1 - landing_page 	2018-01-18 05:27:25 	10329 	interview-with-cool-tshirts-founder 	medium |
+| 2 - shopping_cart 	2018-01-18 07:15:25 	10329 	interview-with-cool-tshirts-founder 	medium |
+| 3 - checkout 	2018-01-22 16:31:25 	10329 	retargetting-campaign 	email |
+| 4 - purchase 	2018-01-22 16:35:25 	10329 	retargetting-campaign 	email |
 
